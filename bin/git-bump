@@ -4,4 +4,32 @@ $:.unshift(File.expand_path('../../lib', __FILE__))
 
 require 'git_bump'
 
-GitBump.start
+require 'optparse'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: example.rb [options]"
+
+
+# default_task 'release'
+# desc '[version]', 'Create and tag a release for the given version'
+# method_options %w(force -f) => :boolean
+
+# desc 'redo', 'amend the previous release and retag'
+# method_options %w(force -f) => :boolean
+
+# desc 'log', 'Show the git log since the last release'
+# desc 'show [version]', 'Show the most recent or given release'
+# method_options :version_only => :boolean
+# desc 'next', 'Show the version number that would be released'
+
+  opts.on("--version_only", "Version only") do |v|
+    options[:version_only] = v
+  end
+
+  opts.on("-f", "--force", "Force") do |v|
+    options[:force] = v
+  end
+end.parse!
+
+GitBump.start(options)
