@@ -19,17 +19,23 @@ git bump can find it:
 
   def self.start(options)
     bump = new(options)
-    ARGV.unshift('release') if ARGV.first =~ /^v?\d/ || %w(major minor point).include?(ARGV.first)
-    case ARGV[0]
-    when "release" then bump.release(ARGV[1])
-    when "next"    then bump.next(ARGV[1])
+    argv = ARGV.dup
+    argv.unshift('release') if command_requires_normalization?(argv)
+    command, sub_command = argv.values_at(0,1)
+    case command
+    when "release" then bump.release(sub_command)
+    when "next"    then bump.next(sub_command)
     when "show"    then bump.show
     when "redo"    then bump.redo
     when "log"     then bump.log
+    when "help"    then bump.help
+    when nil       then bump.release(nil)
     else
-      bump.help
-      exit(42)
     end
+  end
+
+  def command_requires_normalization?(argv)
+    argv.first =~ /^v?\d/ || %w(major minor point).include?(argv.first)
   end
 
   def releases
