@@ -20,7 +20,7 @@ git bump can find it:
   def self.start(options)
     bump = new(options)
     argv = ARGV.dup
-    argv.unshift('release') if command_requires_normalization?(argv)
+    argv.unshift('release') if self.command_requires_normalization?(argv)
     command, sub_command = argv.values_at(0,1)
     case command
     when "release" then bump.release(sub_command)
@@ -209,8 +209,9 @@ try again.  Once you are satisfied with the result, run
     puts generate_version(specifier)
   end
 
-  def help(shell = STDOUT, *)
-    shell.puts <<-EOS
+  def help(shell, *)
+    super
+    shell.say <<-EOS
 With no arguments, git bump defaults to creating a release with the least
 significant component of the version number incremented.  For example,
 1.2.3-rc4 becomes 1.2.3-rc5, while 6.7 becomes 6.8.  To override, provide a

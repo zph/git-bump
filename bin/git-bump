@@ -6,22 +6,30 @@ require 'git_bump'
 
 require 'optparse'
 
+case ARGV[0]
+when "help"
+  ARGV[0] = "--help"
+end
+
 options = {}
 OptionParser.new do |opts|
-  opts.banner = "Usage: example.rb [options]"
+  USAGE = <<-EOS
+Usage: git-bump [release|show|next|help]
 
+Call as follows
+git-bump release [version|major|minor|point]
+git-bump [version|major|minor|point]
 
-# default_task 'release'
-# desc '[version]', 'Create and tag a release for the given version'
-# method_options %w(force -f) => :boolean
+With no arguments, git bump defaults to creating a release with the least
+significant component of the version number incremented.  For example,
+1.2.3-rc4 becomes 1.2.3-rc5, while 6.7 becomes 6.8.  To override, provide a
+version number argument, or one of the following keywords:
 
-# desc 'redo', 'amend the previous release and retag'
-# method_options %w(force -f) => :boolean
-
-# desc 'log', 'Show the git log since the last release'
-# desc 'show [version]', 'Show the most recent or given release'
-# method_options :version_only => :boolean
-# desc 'next', 'Show the version number that would be released'
+major: bump the most significant component
+minor: bump the second most significant component
+point: bump the third most significant component
+    EOS
+  opts.banner = USAGE
 
   opts.on("--version_only", "Version only") do |v|
     options[:version_only] = v
@@ -30,6 +38,7 @@ OptionParser.new do |opts|
   opts.on("-f", "--force", "Force") do |v|
     options[:force] = v
   end
+
 end.parse!
 
 GitBump.start(options)
