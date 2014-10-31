@@ -21,11 +21,11 @@ git bump can find it:
     bump = new(options)
     ARGV.unshift('release') if ARGV.first =~ /^v?\d/ || %w(major minor point).include?(ARGV.first)
     case ARGV[0]
-    when "release" then bump.release
+    when "release" then bump.release(ARGV[1])
+    when "next"    then bump.next(ARGV[1])
+    when "show"    then bump.show
     when "redo"    then bump.redo
     when "log"     then bump.log
-    when "show"    then bump.show
-    when "next"    then bump.next
     else
       bump.help
       exit(42)
